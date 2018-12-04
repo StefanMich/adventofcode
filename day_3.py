@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 
 
@@ -14,6 +15,10 @@ def overlap_claims(fabric):
 
 class Claim():
     def __init__(self, line):
+        regex = re.compile('#(\d+) @ (\d+),(\d+): (\d+)x(\d+)')
+        parsed = regex.search(line)
+        # 1322 @ 149,715: 16x14
+
         id, rest = line.split('@')
         self.id = int(id[1:])
         margins, size = rest.split(':')
