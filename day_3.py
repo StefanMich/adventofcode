@@ -3,7 +3,8 @@ from collections import defaultdict
 
 
 def empty_fabric():
-    return defaultdict(lambda: defaultdict(lambda: 0))
+    return defaultdict(lambda: defaultdict(lambda: list()))
+
 
 def print_fabric(fabric):
     widest = 0
@@ -14,16 +15,18 @@ def print_fabric(fabric):
 
     for vertical in range(len(fabric)):
         for horizontal in range(widest):
-            print(fabric[vertical][horizontal], end='')
+            print(len(fabric[vertical][horizontal]), end='')
         print()
+
 
 def overlap_claims(fabric):
     overlaps = 0
     for vertical in fabric.values():
         for horizontal in vertical.values():
-            if horizontal > 1:
+            if len(horizontal) > 1:
                 overlaps += 1
     return overlaps
+
 
 class Claim():
     def __init__(self, line):
@@ -34,7 +37,15 @@ class Claim():
     def add_claim(self, fabric):
         for vertical in range(self.left_margin, self.left_margin + self.width):
             for horizontal in range(self.top_margin, self.top_margin + self.height):
-                fabric[vertical][horizontal] += 1
+                fabric[vertical][horizontal].append(self.id)
+
+    def alone_claim(self, fabric):
+        for vertical in range(self.left_margin, self.left_margin + self.width):
+            for horizontal in range(self.top_margin, self.top_margin + self.height):
+                inch = fabric[vertical][horizontal]
+                if len(inch) != 1:
+                    return False
+        return True
 
 
 if __name__ == '__main__':
@@ -49,5 +60,13 @@ if __name__ == '__main__':
 
         claim = Claim(line)
         claim.add_claim(fabric)
+
+    for line in input_strings.split('\n'):
+        if not line:
+            continue
+
+        claim = Claim(line)
+        if claim.alone_claim(fabric):
+            print(claim.id)
 
     print(overlap_claims(fabric))
