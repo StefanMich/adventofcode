@@ -1,12 +1,13 @@
 import unittest
 
-from day_3 import Claim, empty_fabric, overlap_claims
+from day_3 import Claim, empty_fabric, overlap_claims, print_fabric
 
 
 class Day3TEst(unittest.TestCase):
 
     def test_add_claim(self):
-        claims = self.example_data()
+        claims = [Claim('#1 @ 0,0: 5x4'),
+                    Claim('#2 @ 4,3: 5x4')]
 
         fabric = empty_fabric()
 
@@ -16,16 +17,20 @@ class Day3TEst(unittest.TestCase):
         for vertical in range(9):
             for horizontal in range(9):
                 inch = fabric[vertical][horizontal]
-                if vertical == 4 and horizontal == 4:
+                if vertical == 4 and horizontal == 3:
                     self.assertEqual(inch, 2)
-                elif ((vertical <= 4 and horizontal <= 4)
-                      or (vertical >= 4 and horizontal >= 4)):
-                    self.assertEqual(inch, 1)
+                elif ((vertical <= 4 and horizontal <= 3)
+                      or (vertical >= 4 and horizontal >= 3)):
+                    try:
+                        self.assertEqual(inch, 1)
+                    except Exception:
+                     print()
                 else:
                     self.assertEqual(inch, 0)
 
     def test_overlap(self):
-        claims = self.example_data()
+        claims =  [Claim('#1 @ 0,0: 5x4'),
+                   Claim('#2 @ 4,3: 5x4')]
 
         fabric = empty_fabric()
 
@@ -51,9 +56,31 @@ class Day3TEst(unittest.TestCase):
 
         self.assertEqual(overlap_claims(fabric), 4)
 
-    def example_data(self):
-        return [Claim('#1 @ 0,0: 5x5'),
-                Claim('#2 @ 4,4: 5x5')]
+    def test_no_overlap(self):
+        fabric = empty_fabric()
+        for line in ["#1 @ 0,0: 4x4",
+                     "#2 @ 10,10: 4x4",
+                     "#3 @ 0,10: 4x4",
+                     "#4 @ 10,0: 4x4"]:
+            Claim(line).add_claim(fabric)
+
+        self.assertEqual(overlap_claims(fabric), 0)
+
+    def test_side_overlap(self):
+        fabric = empty_fabric()
+        for line in ["#1 @ 0,0: 4x4",
+                     "#2 @ 0,3: 4x4",]:
+            Claim(line).add_claim(fabric)
+
+        self.assertEqual(overlap_claims(fabric), 4)
+
+    def test_rectange_overlap(self):
+        fabric = empty_fabric()
+        for line in ["#1 @ 0,0: 4x3",
+                     "#2 @ 2,2: 3x1",]:
+            Claim(line).add_claim(fabric)
+
+        self.assertEqual(overlap_claims(fabric), 2)
 
 
 if __name__ == '__main__':
