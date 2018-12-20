@@ -1,6 +1,6 @@
 import unittest
 
-from day_3 import Claim, empty_fabric, overlap_claims, print_fabric
+from day_3.day_3 import Claim, empty_fabric, overlap_claims
 
 
 class Day3TEst(unittest.TestCase):

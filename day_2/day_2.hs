@@ -9,5 +9,6 @@ main = do
   i <- readFile "day_2_testinput"
 
   let count = Prelude.fmap (\x -> counter x Data.Map.empty) $ lines i
-  putStrLn $ show count
+  let twos = Prelude.fmap (\x -> Data.Map.filter (==2) x) $ count
+  putStrLn $ show twos
 
