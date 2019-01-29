@@ -33,3 +33,11 @@ class Day5Test(unittest.TestCase):
         expected = 'dabCBAcaDA'
 
         self.assertEqual(result, expected)
+
+    def test_symmetric(self):
+        polymer = 'abcdefgGFEDCBA'
+        result = react_polymer(polymer)
+
+        expected = ''
+
+        self.assertEqual(result, expected)

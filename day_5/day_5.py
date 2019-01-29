@@ -1,48 +1,42 @@
 def react_polymer(polymer):
-    previous_length = None
+    previous_length = len(polymer)
     while True:
-        pairs = list(zip(polymer, polymer[1:]))
-        pairs = list(react_iteration(pairs))
+        print(previous_length)
+        pairs = list(react_iteration(polymer))
         polymer = reaction_to_string(pairs)
         new_length = len(polymer)
         if new_length == previous_length:
             break
         previous_length = new_length
 
-
-    result = reaction_to_string(pairs)
+    result = reaction_to_string(polymer)
     return result
 
 
 def reaction_to_string(reaction):
-    try:
-        unzip = list(zip(*reaction))
-
-        try:
-            beginning = unzip[0]
-        except IndexError:
-            beginning = ()
-
-        try:
-            ending = (unzip[1][-1],)
-        except IndexError:
-            ending = ()
-
-        result = beginning + ending
-        result = ''.join(result)
-    except StopIteration:
-        result = ''
+    result = ''.join(reaction)
     return result
 
 
-def react_iteration(pairs):
-    omit = False
-    for pair in pairs:
-        if omit:
-            omit = False
+def react_iteration(polymer):
+    STOP = '|'
+    padded_polymer = polymer + STOP
+    total_pairs = len(padded_polymer) - 1
+
+    remove_next = False
+    for pair in range(total_pairs):
+        first, second = padded_polymer[pair:pair+2]
+        if remove_next:
+            remove_next = False
             continue
-        if pair[0].lower() == pair[1].lower():
-            if pair[0] != pair[1]:
-                omit = True
+        if first.lower() == second.lower():
+            if first != second:
+                remove_next = True
                 continue
-        yield pair
+        yield first
+
+
+if __name__ == '__main__':
+    with open('input') as input_file:
+        input_string = input_file.read()
+        print(len(react_polymer(input_string)))
